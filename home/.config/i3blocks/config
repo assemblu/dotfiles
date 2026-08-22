@@ -1,0 +1,33 @@
+[time]
+command=date '+%Y-%m-%d %H:%M:%S'
+interval=1
+
+[disk]
+command=df -h / | awk 'NR==2 {print $3 "/" $2}'
+interval=60
+label=disk
+
+[memory]
+command=free -h | awk '/^Mem/ {print $3 "/" $2}'
+interval=10
+label=mem
+
+[load]
+command=cat /proc/loadavg | awk '{print $1, $2, $3}'
+interval=5
+label=load
+
+[cpu_temp]
+command=sensors k10temp-pci-00c3 | awk '/Tctl/ {gsub(/[+°C]/,"",$2); print $2"°C"}'
+interval=5
+label=CPU
+
+[gpu0]
+command=nvidia-smi --id=0 --query-gpu=temperature.gpu,power.draw --format=csv,noheader,nounits | awk -F', ' '{printf "%d°C %dW", $1, $2}'
+interval=5
+label=GPU0
+
+[gpu1]
+command=nvidia-smi --id=1 --query-gpu=temperature.gpu,power.draw --format=csv,noheader,nounits | awk -F', ' '{printf "%d°C %dW", $1, $2}'
+interval=5
+label=GPU1
